@@ -13,21 +13,18 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.sun.java_cup.internal.runtime.Symbol;
 
 public class Main extends ApplicationAdapter {
 	SpriteBatch batch;
 	Sprite Hero; 
 	
-	Texture river,cloud;
+	Texture cloud;
 	
 	ShapeRenderer shapeRenderer;
 	BitmapFont font;
 	FreeTypeFontGenerator generator;
 	FreeTypeFontParameter parameter;
-	
-	
-	
+	//Positions of the clouds stored as array.
 	float w_locations_x[];int w_locations_y[];
 	
 	float WindVelocity=65;
@@ -42,7 +39,6 @@ public class Main extends ApplicationAdapter {
 	Button DecreaseWindVel,DecreaseHeroVel;
 	Button IncreaseDir,DecreaseDir;
 	Button show;
-	//desktop/bin
 	
 	boolean showing=false;
 	
@@ -53,34 +49,29 @@ public class Main extends ApplicationAdapter {
 		w_locations_x=new float[7];
 		w_locations_y=new int[7];
 		
+		//Generate random places of clouds.
 		for(int j=0;j<w_locations_x.length;j++) {
 			w_locations_x[j]=(float) (Gdx.graphics.getWidth()+45+Math.random()*445);
 			w_locations_y[j]=(int) (Math.random()*Gdx.graphics.getHeight());
-			//System.out.println(w_locations_x[j]);
 		}
 		
 		batch = new SpriteBatch();
-		//font=new BitmapFont();
 		
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("calibri.ttf"));
 		parameter = new FreeTypeFontParameter();
-		parameter.size = 25; // font size
+		parameter.size = 25; 
 		font = generator.generateFont(parameter);
 		
 		
 		Texture hero=new Texture("superman.png");
-		river=new Texture("river.png");
 		cloud=new Texture("cloud.png");
 		
 		
 		Hero=new Sprite(hero);
 		shapeRenderer=new ShapeRenderer();
 		Hero.setPosition(150,50);
-		//Hero.setSize(100, 300);
 		Hero.setSize(390,250);
 		Hero.setOrigin(150,100);
-		//Hero.setRotation(180);
-		//Hero.setScale(4);
 		
 		W=Gdx.graphics.getWidth();
 		H=Gdx.graphics.getHeight();
@@ -97,7 +88,6 @@ public class Main extends ApplicationAdapter {
 		DecreaseDir=new Button(60,H-240,35,30,bg,"-");
 		show=new Button(10,45,35,30,bg,"X");
 		
-		//System.out.println(W+" "+H);
 	}
 	
 	private void HUD() {
@@ -143,6 +133,7 @@ public class Main extends ApplicationAdapter {
     		if(IncreaseDir.check(x, y)) {Angle+=10;}
     		if(DecreaseDir.check(x, y)) {Angle-=10;}
     		if(show.check(x, y)) {
+    			//The button on the lower which toggles ON and OFF.
     			if(!showing) {
     				showing=true;
     				show.TITLE="X";
@@ -152,38 +143,10 @@ public class Main extends ApplicationAdapter {
     				show.TITLE=" ";
     			}
     		}
-    		
-    		
-    		
+    	
 		}	
     	
-		/*
-		if(IncreaseWindVel.justPressed()) {
-			WindVelocity+=35;
-		}
-		
-		if(IncreaseHeroVel.justPressed()) {
-			HeroVelocity+=35;
-		}
-		
-		
-		if(DecreaseWindVel.justPressed()) {
-			WindVelocity-=25;
-		}
-		
-		if(DecreaseHeroVel.justPressed()) {
-			HeroVelocity-=25;
-		}
-		
-		if(IncreaseDir.justPressed()) {
-			angle+=10;
-		}
-		
-		if(DecreaseDir.justPressed()) {
-			angle-=10;
-		}
-		*/
-		
+
 		
 	}
 	
@@ -200,7 +163,6 @@ public class Main extends ApplicationAdapter {
 	}
 	
 	public void Wind_Update() {
-	
 		
 		HUD();
 		Hero.setPosition((int)(150+Math.random()*5),(int)(50+Math.random()*10));
@@ -212,7 +174,8 @@ public class Main extends ApplicationAdapter {
 	public Vector2 rotate(Vector2 p,Vector2 o,float degrees) {
 		
 		/*
-		 * If you rotate point (px, py) around point (ox, oy) by angle theta you'll get:
+		 * Theory:
+		 * If you rotate point (px, py) around point (ox, oy) by angle theta 
 
 		p'x = cos(theta) * (px-ox) - sin(theta) * (py-oy) + ox
 		
@@ -220,7 +183,7 @@ public class Main extends ApplicationAdapter {
 		
 		: p'x += ox
 		
-*/
+		 */
 		float theta=(float) Math.toRadians(degrees);
 	
 		Vector2 X=new Vector2();
@@ -236,26 +199,9 @@ public class Main extends ApplicationAdapter {
 		
 		 shapeRenderer.begin(ShapeType.Line);
 		 shapeRenderer.setColor(c);
-		 Gdx.gl.glLineWidth(width); // Or whatever thickness you need
+		 Gdx.gl.glLineWidth(width);
 		 shapeRenderer.line(x1, y1, x2, y2);
-		// shapeRenderer.rectLine(new Vector2(x1,y1),new Vector2(x2,y2),width);
 		 shapeRenderer.end();
-		
-		/*
-		 shapeRenderer.begin(ShapeType.Line);
-		 shapeRenderer.setColor(1, 1, 0, 1);
-		 shapeRenderer.line(x, y, x2, y2);
-		 shapeRenderer.rect(x, y, width, height);
-		 shapeRenderer.circle(x, y, radius);
-		 shapeRenderer.end();
-		 
-		 shapeRenderer.begin(ShapeType.Filled);
-		 shapeRenderer.setColor(0, 1, 0, 1);
-		 shapeRenderer.rect(x, y, width, height);
-		 shapeRenderer.circle(x, y, radius);
-		 shapeRenderer.end();
-		
-		 */
 	}
 	
 	@Override
@@ -264,11 +210,8 @@ public class Main extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
-		//batch.draw(Hero.getTexture(), Hero.getX(),  Hero.getY(),Hero.getWidth(),Hero.getHeight());
-		batch.draw(river,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		
-		
-		//Scroll only around the x-axis
+		//Clouds scroll only around the x-axis
 		float value=Gdx.graphics.getDeltaTime()*WindVelocity*2;
 		for(int j=0;j<w_locations_x.length;j++) {
 			w_locations_x[j]-=value;
@@ -295,9 +238,6 @@ public class Main extends ApplicationAdapter {
 		
 		batch.end();
 		
-		
-		//System.out.println("Hero rotation:"+Hero.getRotation()+" Actual value "+angle);
-		
 		Vector2 f=rotate(new Vector2(x+150,y),new Vector2(x,y),Angle);
 		
 		//the line rotating with the Hero.
@@ -313,13 +253,12 @@ public class Main extends ApplicationAdapter {
 		//the diagonal.
 		line(x,y,f.x+200,f.y,5,Color.YELLOW);
 		
-		//angle+=0.5;
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		generator.dispose(); // avoid memory leaks, important
+		generator.dispose();
 		
 	}
 }
